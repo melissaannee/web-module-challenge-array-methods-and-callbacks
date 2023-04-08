@@ -44,8 +44,8 @@ Use the higher-order function called getYears to do the following:
 3. Return an array called years containing all of the years in the getFinals data set*/
 
 /**
- * 1. Create a variable that will hold the Finals years.
- * 2. Create another variable to get access to the Finals data.
+ * 1. Create a variable that will hold an empty array but will later hold the Finals years.
+ * 2. Create another variable to get access to the Finals data using a callback function.
  * 3. Iterate through the finals array.
  *      a. Pushing to the years array.
  * 4. Return years array.
@@ -73,7 +73,7 @@ Use the higher-order function getWinners to do the following:
 
 /**
  * 1. Create a variable that holds the finals array by using the callback function getFinals.
- * 2. Create a variable that will hold an array of the winning countries,
+ * 2. Create a variable that will hold an empty array but will later hold an array of the winning countries,
  * 3. Iterate through the finals array.
  * 4. Create an if/else statement to deterimine the winning countries.
  *      a. Pushing the winning countries to the winningCountries array.
@@ -81,16 +81,16 @@ Use the higher-order function getWinners to do the following:
  */
 
 function getWinners(array, callback) {
-    let finals = callback(array)
-    let winningCountries = [];
+    let finals = callback(array);
+    let winners = [];
     for (let i = 0; i < finals.length; i ++) {
         if (finals[i]["Home Team Goals"] > finals[i]["Away Team Goals"]) {
-            winningCountries.push(finals[i]["Home Team Name"]);
+            winners.push(finals[i]["Home Team Name"]);
         } else {
-            winningCountries.push(finals[i]["Away Team Name"]);
+            winners.push(finals[i]["Away Team Name"]);
         }    
     }
-    return winningCountries
+    return winners
 }
 
 // console.log(getWinners(fifaData, getFinals))
@@ -107,11 +107,30 @@ Use the higher-order function getWinnersByYear to do the following:
 💡 HINT: the strings returned need to exactly match the string in step 4.
  */
 
-function getWinnersByYear() {
-    
+/**
+ * 1. Create a variable (countryWins) that will hold an empty array but will later hold an array of strings that will read "In {year}, {country} won the world cup!".
+ * 2. Create a variable (finals) that holds the finals array by using a callback function (getFinals).
+ * 3. Create a variable (years) that holds the years array by using the callback function (getYears). 
+ * 4. Create a variable (winners) that holds the winners array by using the callback function (getWinners).
+ * 5. Create a for loop that will iterate through the finals array.
+ *      a. Create a variable that will hold the string "In {year}, {country} won the world cup!".
+ *      b. Pushing the strings with the years and winners included to the empty array.
+ * 6. Return the countryWins array.
+ */
+
+function getWinnersByYear(array, callback1, callback2, callback3) {
+    let countryWins = [];
+    let finals = callback1(array); // finals[]
+    let years = callback2(array, callback1); // yearWon[]
+    let winners = callback3(array, callback1); // winners[]
+    for (let i = 0; i < finals.length; i++) {
+        let str = `In ${years[i]}, ${winners[i]} won the world cup!`
+        countryWins.push(str)
+    }
+    return countryWins
 }
 
-
+// console.log(getWinnersByYear(fifaData, getFinals, getYears, getWinners))
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 6: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 Use the higher order function `getAverageGoals` to do the following: 
@@ -127,11 +146,29 @@ Use the higher order function `getAverageGoals` to do the following:
  
 */
 
-function getAverageGoals(/* code here */) {
-    /* code here */
- }
+/**
+ * 1. Create a variable (goals) that holds an empty array but will later hold the total points scored on both home and away teams per match in the finals.
+ * 2. Create a variable (finals) to give access to the finals array.
+ * 3. Iterate through the finals array and push the added goals for both home and away per match to the (goals) array.
+ * 4. Use the reduce() method to add the total number of goals together.
+ * 5. Create a variable (result) to hold the result and divide the total goals by the number of matches in the finals using goals.length.
+ * 6. Return result.toFixed(2) to have the answer rounded to the second decimal place.
+ */
 
+function getAverageGoals(callback) { 
+    let goals = [];
+    let finals = callback;
+    for (let i = 0; i < finals.length; i++) {
+        goals.push(finals[i]["Home Team Goals"] + finals[i]["Away Team Goals"])
+    }
+    const sum = goals.reduce((prev, curr) => {
+        return prev + curr
+    }, 0);    
+    let result = sum / goals.length
+    return result.toFixed(2)
+}
 
+console.log(getAverageGoals(getFinals(fifaData)))
 
 
 /// 🥅 STRETCH 🥅 ///
